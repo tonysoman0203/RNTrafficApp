@@ -7,14 +7,16 @@ import App from "./components/App";
 import * as firebase from 'firebase';
 import { firebaseConfig } from '../js/config/config';
 const firebaseApp = firebase.initializeApp(firebaseConfig);
-const rootRef = firebaseApp.database().ref();
-const itemsRef = rootRef.child('image-list');
+const database = firebase.database();
+const rootRef = database.ref();
+const itemsRef = rootRef.child('image-list').child('image');
 
+console.log(`itemsRef = ${itemsRef}`)
 export default class RNTrafficApp extends Component {
     render(){
         return (
             <Provider store={store}>
-                <App />
+                <App itemRefs={itemsRef}/>
             </Provider>
         );
     }

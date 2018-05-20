@@ -36,7 +36,10 @@ class App extends Component<Props> {
   }
   
   componentDidMount(){
-     
+    this.props.itemRefs.once('value', (snap)=>{
+      var items = [];
+      console.log(JSON.stringify(snap.val()))
+    })
   }
 
   render() {
