@@ -36,7 +36,7 @@ class App extends Component<Props> {
   }
   
   componentDidMount(){
-      this.props.dispatch(fetchData)
+     
   }
 
   render() {
@@ -56,7 +56,7 @@ class App extends Component<Props> {
         </Header>
         <Content>
           <Text>
-            {JSON.stringify(this.props)}
+             Hello World !
           </Text>
         </Content>
         <Footer>
