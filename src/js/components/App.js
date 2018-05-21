@@ -7,7 +7,7 @@
 import React from 'react'
 import { Component } from 'react'
 import { View,Platform,StyleSheet, FlatList} from 'react-native';
-import { Footer, FooterTab, Button, Text} from 'native-base'
+import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Spinner, Right, Body, Icon, Text } from 'native-base';
 import { connect } from "react-redux";
 import { bindActionCreators } from 'redux'
 import action, { fetchData } from '../actions'
@@ -30,52 +30,83 @@ class App extends Component<Props> {
   constructor(){
     super()
     this.state = {
-      data :  []
+      data :  [],
+      isLoading: false
     }
   }
 
   componentWillMount(){}
 
-  
-  render() {
-    console.log(`render = ${JSON.stringify(this.state.data)}`)
-    console.log(`data size = ${this.state.data.lengthrr}`)
-    return (
-      <View style={{flex:1}}>
-        <FlatList
-              style={{flex:1, backgroundColor: 'white'}}
-              data={this.state.data}
-              keyExtractor={(item, index) => item._key}
-              renderItem={({item})=>{
-                <View>
-                  <Text>{item._keu}</Text>
-                </View>
-              }}
+  componentDidMount(){}
+
+  renderRow(item){
+    console.log(`renderRow = item ? ${JSON.stringify(item)}`);
+      return(
+        <View style={{flex:1, justifyContent: 'center'}}>
+          <MyCardItem
+            image={item.image}
+            key={item.key}
           />
-          <Footer>
-          <FooterTab>
-            <Button full onPress={()=>
-              this.props.itemRefs.on('value', (snap)=>{
-                console.log(JSON.stringify(snap.val()))
-                const items = []
-                snap.forEach((child) => {
-                  console.log(JSON.stringify(child))
-                  
-                  items.push({
-                    item: child,
-                    _key: child.key
-                  });
-                  
+        </View>
+      )
+  }
+
+  renderFlatList(){
+    if(this.state.isLoading){
+      return (<Spinner />)
+    }else{
+      return (
+      <FlatList
+          data={this.state.data}
+          keyExtractor={item=>item.key}
+          renderItem={({item}) => this.renderRow(item)}
+        />
+      )
+    }
+  }
+
+  render() {
+    return (
+      <Container>
+      <Header>
+        <Left>
+          <Button transparent>
+            <Icon name='menu' />
+          </Button>
+        </Left>
+        <Body>
+          <Title>RNTrafficApp</Title>
+        </Body>
+        <Right />
+      </Header>
+      <Content>
+        {this.renderFlatList()}
+      </Content>
+      <Footer>
+        <FooterTab>
+          <Button full onPress={()=>{
+            this.setState({isLoading: true})
+            this.props.itemRefs.on('value', (snap)=>{
+              console.log(JSON.stringify(snap.val()))
+              const items = []
+              snap.forEach((child) => {
+                console.log("componentWillMount ="+JSON.stringify(child))
+                
+                items.push({
+                  image: child,
+                  key: child.key
                 });
-                console.log(JSON.stringify(items))
-                this.setState({data: items})
-              })
-            }>
-              <Text>Footer</Text>
-            </Button>
-          </FooterTab>
-        </Footer>
-      </View>
+                
+              });
+              console.log(`componentWillMount items = ${JSON.stringify(items)}`)
+              this.setState({data: items, isLoading: false})
+            })
+          }}>
+            <Text>Refresh</Text>
+          </Button>
+        </FooterTab>
+      </Footer>
+    </Container>
       
     );
   }
