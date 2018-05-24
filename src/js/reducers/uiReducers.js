@@ -1,13 +1,14 @@
-import { handleActions } from 'redux-actions';
-import { UIState } from '../constants/models'
-import * as actions from '../constants/action-types'
+import * as Models from '../constants/models'
+import * as Actions from '../constants/action-types'
 
-const uiReducers = handleActions({
-    FETCH_DATA_LOADING: (state) => (
-      state.set(
-        'isModalVisible',
-        !state.get('isModalVisible')
-      )
-    ),  
-  }, UIState);
-  export default uiReducers;
+const UIReducers = (state = Models.UIState, action) =>{
+    switch(action.type){
+        case Actions.FETCH_DATA_LOADING:{
+            return state.set('isLoading',!state.get(`isLoading`))
+        }
+        default: return state;
+    }
+}
+
+
+export default UIReducers

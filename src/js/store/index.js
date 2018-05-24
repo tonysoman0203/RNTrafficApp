@@ -1,18 +1,17 @@
 // src/js/store/index.js
-import { createStore, applyMiddleware  } from "redux";
+import { createStore, applyMiddleware, compose } from 'redux'
+import reducers from '../reducers/index'
+import thunk from 'redux-thunk'
+import Immutable from 'immutable'
 import createSagaMiddleware from 'redux-saga'
-import ReduxThunk from 'redux-thunk'
-import Immutable from 'immutable';
-import { helloSaga } from '../saga/index'
-import rootReducer from "../reducers/index";
-import { createLogger  }from 'redux-logger'
-const initialState = Immutable.Map();
+const sagaMiddleware = createSagaMiddleware()
+import { createLogger} from 'redux-logger';
+const logger = createLogger();
 
-const store = createStore(rootReducer,
+const initialState = {}
+
+export default createStore(reducers,
     initialState,
-    applyMiddleware(createSagaMiddleware(helloSaga)),
-    applyMiddleware(ReduxThunk),
-    applyMiddleware(createLogger({ stateTransformer: state => state.toJS() }))
-);
+    compose(applyMiddleware(thunk, sagaMiddleware, logger))
 
-export default store;
+)

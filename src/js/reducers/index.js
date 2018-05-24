@@ -1,8 +1,10 @@
-import { combineReducers } from 'redux-immutable';
-import ui from './uiReducers'
-import data from './dataReducers'
-const rootReducers = combineReducers({
-    ui, data
-})
+import { combineReducers } from 'redux'
+import UIReducers from '../reducers/UIReducers'
+import DataReducers from '../reducers/DataReducers'
 
-export default rootReducers;
+const trafficApp = combineReducers({
+    UIReducers, 
+    DataReducers
+  })
+  
+export default trafficApp

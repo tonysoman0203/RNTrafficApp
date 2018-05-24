@@ -10,18 +10,24 @@ import { View,Platform,StyleSheet, FlatList} from 'react-native';
 import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Spinner, Right, Body, Icon, Text } from 'native-base';
 import { connect } from "react-redux";
 import { bindActionCreators } from 'redux'
-import action, { fetchData } from '../actions'
-import * as saga from '../saga'
+import action, { callFireBase } from '../actions'
 import MyCardItem from './MyCardItem'
+import * as Actions from '../constants/action-types'
+import * as Models from '../constants/models'
+import moment from 'moment'
+import { itemsRef } from '../index'
+import store from "../store/index";
+
 
 const mapStateToProps = state => {
-  return { trafficCams: state.trafficCams };
+  return { state };
 };
 
 const mapDispatchToProps = (dispatch) => {
-  let actions = bindActionCreators({ action, saga });
-  return { ...actions, dispatch };
+  let actions = bindActionCreators({ action });
+  return { ...actions, dispatch, callService: ()=>dispatch(callFireBase()) };
 }
+
 
 type Props = {}
 
@@ -31,20 +37,30 @@ class App extends Component<Props> {
     super()
     this.state = {
       data :  [],
-      isLoading: false
     }
   }
 
   componentWillMount(){}
 
-  componentDidMount(){}
+  componentDidMount(){
+    this.props.callService()
+  }
+
+  componentWillReceiveProps(nextprops){
+    //console.log(`componentWillReceiveProps = ${JSON.stringify(nextprops)}`);
+    if(nextprops.state.DataReducers){
+      this.setState({
+        data: nextprops.state.DataReducers.items
+      })
+    }
+  }
 
   renderRow(item){
-    console.log(`renderRow = item ? ${JSON.stringify(item)}`);
+    //console.log(`renderRow = item ? ${JSON.stringify(item)}`);
       return(
         <View style={{flex:1, justifyContent: 'center'}}>
           <MyCardItem
-            image={item.image}
+            item={item}
             key={item.key}
           />
         </View>
@@ -52,7 +68,7 @@ class App extends Component<Props> {
   }
 
   renderFlatList(){
-    if(this.state.isLoading){
+    if(this.props.state.UIReducers.get(`isLoading`)){
       return (<Spinner />)
     }else{
       return (
@@ -65,7 +81,13 @@ class App extends Component<Props> {
     }
   }
 
+  async onRefreshButtonClick(){
+    this.props.callService()
+  }
+
   render() {
+    //console.log(`this.props.state.DataReducers.get = ${JSON.stringify(this.props.state.DataReducers)}`)
+   
     return (
       <Container>
       <Header>
@@ -85,22 +107,7 @@ class App extends Component<Props> {
       <Footer>
         <FooterTab>
           <Button full onPress={()=>{
-            this.setState({isLoading: true})
-            this.props.itemRefs.on('value', (snap)=>{
-              console.log(JSON.stringify(snap.val()))
-              const items = []
-              snap.forEach((child) => {
-                console.log("componentWillMount ="+JSON.stringify(child))
-                
-                items.push({
-                  image: child,
-                  key: child.key
-                });
-                
-              });
-              console.log(`componentWillMount items = ${JSON.stringify(items)}`)
-              this.setState({data: items, isLoading: false})
-            })
+            this.onRefreshButtonClick()
           }}>
             <Text>Refresh</Text>
           </Button>
@@ -112,7 +119,7 @@ class App extends Component<Props> {
   }
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);
 
 const styles = StyleSheet.create({
   container: {

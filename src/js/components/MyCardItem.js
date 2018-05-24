@@ -5,10 +5,7 @@ import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Rig
 export default class MyCardItem extends Component {
     constructor(props){
         super(props)
-        this.state = {
-          data: {}
-        }
-        console.log(`this.props.MyCardItem = ${JSON.stringify(props.image) }`);
+        console.log(`this.props.MyCardItem = ${JSON.stringify(props.item) }`);
       }
 
     renderCard(json){
@@ -20,21 +17,28 @@ export default class MyCardItem extends Component {
             <CardItem>
               <Body>
                 <Text>
-                   {jsonParse[`region`]}
+                   {jsonParse.image.region}
                 </Text>
               </Body>
             </CardItem>
             <CardItem>
               <Left>
-                <Thumbnail source={{uri: jsonParse.url}} />
+                <Thumbnail source={{uri: jsonParse.image.url}} />
                 <Body>
-                  <Text>{jsonParse.region}</Text>
-                  <Text note>{jsonParse.description}</Text>
+                  <Text>{jsonParse.image.region}</Text>
+                  <Text note>{jsonParse.image.description}</Text>
                 </Body>
               </Left>
+              <Right>
+                <Text note>updated at : {jsonParse.updatedAt}</Text>
+              </Right>  
             </CardItem>
             <CardItem cardBody>
-              <Image source={{uri: jsonParse.url}} style={{height: 200, width: 0, flex: 1}}/>
+              <Image key={jsonParse.image.url.concat(`?updatedAt=${jsonParse.updatedAt}`)}
+              source={{uri: jsonParse.image.url, 
+              cache: 'reload', 
+              headers: {Pragma: 'no-cache' } }} 
+              style={{height: 200, width: 0, flex: 1}}  />
             </CardItem>
           </Card>
       </View>    
@@ -42,6 +46,6 @@ export default class MyCardItem extends Component {
     }
 
     render(){
-      return this.renderCard(JSON.stringify(this.props.image))
+      return this.renderCard(JSON.stringify(this.props.item))
     }
 }

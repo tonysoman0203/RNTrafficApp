@@ -3,5 +3,5 @@ export const DataState = Immutable.fromJS({
     imagelists:[]
 })
 export const UIState = Immutable.fromJS({
-    isModalVisible: false
+    isLoading: false
 })
