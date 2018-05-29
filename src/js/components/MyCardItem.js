@@ -34,8 +34,8 @@ export default class MyCardItem extends Component {
               </Right>  
             </CardItem>
             <CardItem cardBody>
-              <Image key={jsonParse.image.url.concat(`?updatedAt=${jsonParse.updatedAt}`)}
-              source={{uri: jsonParse.image.url, 
+              <Image key={new Date()}
+              source={{uri: jsonParse.image.url.concat(`?updatedAt=${jsonParse.updatedAt}`), 
               cache: 'reload', 
               headers: {Pragma: 'no-cache' } }} 
               style={{height: 200, width: 0, flex: 1}}  />
