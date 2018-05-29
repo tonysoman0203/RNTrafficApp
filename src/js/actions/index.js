@@ -7,10 +7,10 @@ import App from '../components/App'
 import { bindActionCreators } from 'redux'
 
   
-export const callFireBase = () =>{
+export const callFireBase = (reg) =>{
     return dispatch => {
         dispatch(toggleLoading())
-        callWebService()
+        callFireBaseOrderByRegion(reg)
         .then(response => {
             console.log(`callFirebase = ${JSON.stringify(response)}`);
             dispatch(toggleLoading())
@@ -20,6 +20,30 @@ export const callFireBase = () =>{
 
         })
     }
+}
+
+export const getDataByRegion = (region) => {
+    return dispatch => {
+        dispatch(toggleLoading())
+        callFireBaseOrderByRegion(region)
+        .then(response => {
+            console.log(`getDataByRegion = ${JSON.stringify(response)}`);
+            dispatch(toggleLoading())
+            if(response){
+                dispatch(callFirebaseSuccess(response))
+            }
+            
+        })
+        .catch((err)=>{
+
+        })
+    }
+}
+
+function callFireBaseOrderByRegion(region){
+    return itemsRef.orderByChild('region').equalTo(region).once('value', snap=>{
+        return snap.val();
+    })
 }
 
 function callWebService(){

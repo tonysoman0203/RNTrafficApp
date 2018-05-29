@@ -7,17 +7,18 @@
 import React from 'react'
 import { Component } from 'react'
 import { View,Platform,StyleSheet, FlatList} from 'react-native';
-import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Spinner, Right, Body, Icon, Text } from 'native-base';
+import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Spinner, Right, Body, Icon, Text, Tab, Tabs, ScrollableTab } from 'native-base';
 import { connect } from "react-redux";
 import { bindActionCreators } from 'redux'
-import action, { callFireBase } from '../actions'
+import action, { getDataByRegion } from '../actions'
 import MyCardItem from './MyCardItem'
 import * as Actions from '../constants/action-types'
 import * as Models from '../constants/models'
 import moment from 'moment'
 import { itemsRef } from '../index'
 import store from "../store/index";
-
+import Tab1 from './Tab1';
+import Tab2 from './Tab2';
 
 const mapStateToProps = state => {
   return { state };
@@ -25,7 +26,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
   let actions = bindActionCreators({ action });
-  return { ...actions, dispatch, callService: ()=>dispatch(callFireBase()) };
+  return { ...actions, dispatch, callService: (reg)=>dispatch(getDataByRegion(reg)) };
 }
 
 
@@ -42,77 +43,66 @@ class App extends Component<Props> {
 
   componentWillMount(){}
 
-  componentDidMount(){
-    this.props.callService()
-  }
+  componentDidMount(){}
 
   componentWillReceiveProps(nextprops){
-    //console.log(`componentWillReceiveProps = ${JSON.stringify(nextprops)}`);
-    if(nextprops.state.DataReducers){
-      this.setState({
-        data: nextprops.state.DataReducers.items
-      })
-    }
+    
   }
 
-  renderRow(item){
-    //console.log(`renderRow = item ? ${JSON.stringify(item)}`);
-      return(
-        <View style={{flex:1, justifyContent: 'center'}}>
-          <MyCardItem
-            item={item}
-            key={item.key}
-          />
-        </View>
-      )
-  }
-
-  renderFlatList(){
+  renderTab1(){
     if(this.props.state.UIReducers.get(`isLoading`)){
       return (<Spinner />)
     }else{
-      return (
-      <FlatList
-          data={this.state.data}
-          keyExtractor={item=>item.key}
-          renderItem={({item}) => this.renderRow(item)}
-        />
-      )
+      // console.log(`renderTab1 this.state.data =${JSON.stringify(this.state.data)}`);
+      return (<Tab1 />)
     }
   }
 
-  async onRefreshButtonClick(){
-    this.props.callService()
+  renderTab2(){
+    console.log(`renderTab2 `);
+    if(this.props.state.UIReducers.get(`isLoading`)){
+      return (<Spinner />)
+    }else{
+      // console.log(`renderTab1 this.state.data =${JSON.stringify(this.state.data)}`);
+      return (<Tab2 />)
+    }
   }
 
   render() {
-    //console.log(`this.props.state.DataReducers.get = ${JSON.stringify(this.props.state.DataReducers)}`)
+    // console.log(`this.props.state.DataReducers.get = ${JSON.stringify(this.props.state.DataReducers)}`)
    
     return (
       <Container>
-      <Header>
+      <Header hasTabs >
         <Left>
-          <Button transparent>
-            <Icon name='menu' />
-          </Button>
+            <Button transparent>
+              <Icon name='menu' />
+            </Button>
         </Left>
         <Body>
-          <Title>RNTrafficApp</Title>
+            <Title>RNTrafficApp</Title>
         </Body>
-        <Right />
+        <Right/>
       </Header>
-      <Content>
-        {this.renderFlatList()}
-      </Content>
-      <Footer>
-        <FooterTab>
-          <Button full onPress={()=>{
-            this.onRefreshButtonClick()
-          }}>
-            <Text>Refresh</Text>
-          </Button>
-        </FooterTab>
-      </Footer>
+      <Tabs initialPage={0} onChangeTab={(object)=>{
+        console.log(`onChangeTab from : ${object.from} i= ${object.i} `);
+          const from = object.from
+          const to = object.i
+          if(from < to){
+            this.props.callService('Kowloon')
+          }else{
+            this.props.callService('Hong Kong Island')
+          }
+      }}   renderTabBar={()=> <ScrollableTab />} 
+      >
+        <Tab ref="tab1" heading="Hong Kong Island">
+          {this.renderTab1()}
+        </Tab>
+        <Tab ref="tab2" heading="Kowloon">
+          {this.renderTab2()}
+        </Tab>
+      </Tabs>
+        
     </Container>
       
     );
