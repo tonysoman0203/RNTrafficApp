@@ -5,11 +5,11 @@ import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Rig
 export default class MyCardItem extends Component {
     constructor(props){
         super(props)
-        console.log(`this.props.MyCardItem = ${JSON.stringify(props.item) }`);
+        // console.log(`this.props.MyCardItem = ${JSON.stringify(props.item) }`);
       }
 
     renderCard(json){
-      console.log(`renderCard = ${json}`)
+      // console.log(`renderCard = ${json}`)
       var jsonParse = JSON.parse(json)
       return(
       <View>  
