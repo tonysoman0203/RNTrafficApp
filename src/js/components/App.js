@@ -43,12 +43,10 @@ class App extends Component<Props> {
 
   componentWillMount(){}
 
-  componentDidMount(){}
-
-  componentWillReceiveProps(nextprops){
-    
+  componentDidMount(){
+    this.props.callService("Hong Kong Island")
   }
-
+  
   renderTab1(){
     if(this.props.state.UIReducers.get(`isLoading`)){
       return (<Spinner />)
@@ -84,7 +82,9 @@ class App extends Component<Props> {
         </Body>
         <Right/>
       </Header>
-      <Tabs initialPage={0} onChangeTab={(object)=>{
+      <Tabs 
+      
+      initialPage={0} onChangeTab={(object)=>{
         console.log(`onChangeTab from : ${object.from} i= ${object.i} `);
           const from = object.from
           const to = object.i
@@ -93,9 +93,9 @@ class App extends Component<Props> {
           }else{
             this.props.callService('Hong Kong Island')
           }
-      }}   renderTabBar={()=> <ScrollableTab />} 
+      }}
       >
-        <Tab ref="tab1" heading="Hong Kong Island">
+        <Tab ref="tab1" heading="Hong Kong Island" > 
           {this.renderTab1()}
         </Tab>
         <Tab ref="tab2" heading="Kowloon">

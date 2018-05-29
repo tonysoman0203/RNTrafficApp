@@ -35,19 +35,10 @@ class Tab1 extends Component<Props>{
         }
     }
     
-    componentDidMount(){}
-
-    componentDidUpdate(nextProps, nextState){
-        console.log(`Tab1 componentWillUpdate: nextState = ${JSON.stringify(nextState)}`);
-    }
-
     componentWillReceiveProps(nextProps){
-        // console.log(`componentWillReceiveProps Tab1 props = ${JSON.stringify(nextProps)}`);
-        if(nextProps != this.props){
-            this.setState({
-                data: nextProps.state.DataReducers.items
-            })
-        }
+        this.setState({
+            data: nextProps.state.DataReducers.items
+        })
     }
 
     renderFlatList(){
@@ -61,7 +52,6 @@ class Tab1 extends Component<Props>{
     }
     
       renderRow(item){
-        //console.log(`renderRow = item ? ${JSON.stringify(item)}`);
           return(
             <View style={{flex:1, justifyContent: 'center'}}>
               <MyCardItem

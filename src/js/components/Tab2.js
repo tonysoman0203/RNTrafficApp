@@ -35,22 +35,13 @@ class Tab2 extends Component<Props>{
         
     }
     
-    componentDidMount(){
-        // this.props.callService("Kowloon");
-    }
-
-    componentDidUpdate(nextProps, nextState){
-        console.log(`Tab2 componentWillUpdate: nextState = ${JSON.stringify(nextState)}`);
-    }
-
     componentWillReceiveProps(nextProps){
         console.log(`componentWillReceiveProps Tab1 props = ${JSON.stringify(nextProps)}`);
         if(nextProps != this.props){
             this.setState({
                 data: nextProps.state.DataReducers.items
             })
-        }
-        
+        }   
     }
 
     renderFlatList(){

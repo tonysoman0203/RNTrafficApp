@@ -29,9 +29,7 @@ export const getDataByRegion = (region) => {
         .then(response => {
             console.log(`getDataByRegion = ${JSON.stringify(response)}`);
             dispatch(toggleLoading())
-            if(response){
-                dispatch(callFirebaseSuccess(response))
-            }
+            dispatch(callFirebaseSuccess(response))
             
         })
         .catch((err)=>{
