@@ -4,11 +4,11 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "init": "npm install --save",
+    "init": "yarn install",
     "test": "jest",
     "flow": "flow",
     "flow-stop": "flow stop",
-    "start:android": "react-native run-android",
+    "android": "react-native run-android",
     "ios": "react-native run-ios",
     "rlink": "react-native link"
   },
